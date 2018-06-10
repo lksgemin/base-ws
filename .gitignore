@@ -1,0 +1,17 @@
+.classpath
+.gradle
+.project
+.settings
+.springBeans
+bin
+logs
+
+.svn
+
+# intellij files
+.idea
+.tern-project
+base-ws.iml
+/classes/
+/build/
+
