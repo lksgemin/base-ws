@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -80,6 +81,15 @@ public abstract class RestService {
 
 		return jsonMessage.getErrorResponse(e);
 	}
+	
+	@ExceptionHandler(BadCredentialsException.class)
+	@ResponseStatus(UNAUTHORIZED)
+	public @ResponseBody ErrorResponse handleException(HttpServletRequest request, BadCredentialsException e) {
+		log(request, e);
+
+		return jsonMessage.getErrorResponse(e);
+	}
+	
 
 	@ExceptionHandler(PreconditionFailedException.class)
 	@ResponseStatus(PRECONDITION_FAILED)
