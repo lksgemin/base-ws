@@ -37,7 +37,7 @@ public class MainController {
 	
 	@ApiOperation(value = "getAllUsers", nickname = "getAllUsers", notes = "Get All Users")
 	@ApiResponses({
-			@ApiResponse(code = 200, message = "Transactions Extract Search Response", response = User[].class)
+			@ApiResponse(code = 200, message = "List users Response", response = User[].class)
 	})
 	@GetMapping(path="/all")
 	public @ResponseBody Iterable<User> getAllUsers() {

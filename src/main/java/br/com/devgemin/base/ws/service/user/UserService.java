@@ -1,11 +1,14 @@
 package br.com.devgemin.base.ws.service.user;
 
+import org.springframework.stereotype.Component;
+
 import br.com.devgemin.base.ws.exception.baseexception.notfound.UserNameNotFoundException;
 import br.com.devgemin.base.ws.model.User;
 import br.com.devgemin.base.ws.repository.UserRepository;
 import br.com.devgemin.base.ws.response.UserIdentityAvailabilityResponse;
 import br.com.devgemin.base.ws.response.UserProfileResponse;
 
+@Component
 public class UserService {
 
 	private UserRepository userRepository;
