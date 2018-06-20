@@ -15,10 +15,12 @@ public class SignUpRequest {
     @Size(max = 40)
     @Email
     private String email;
-
+    
     @NotBlank
     @Size(min = 6, max = 20)
     private String password;
+
+    private boolean active;
 
     public String getName() {
         return name;
@@ -44,11 +46,19 @@ public class SignUpRequest {
         this.email = email;
     }
 
-    public String getPassword() {
+	public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
 }

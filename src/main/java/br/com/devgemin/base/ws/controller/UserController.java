@@ -1,35 +1,47 @@
 package br.com.devgemin.base.ws.controller;
 
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.devgemin.base.ws.request.UpdateUserRequest;
+import br.com.devgemin.base.ws.response.SuccessResponse;
 import br.com.devgemin.base.ws.response.UserIdentityAvailabilityResponse;
 import br.com.devgemin.base.ws.response.UserProfileResponse;
+import br.com.devgemin.base.ws.response.UserResponse;
 import br.com.devgemin.base.ws.response.UserSummary;
 import br.com.devgemin.base.ws.security.CurrentUser;
 import br.com.devgemin.base.ws.security.UserPrincipal;
 import br.com.devgemin.base.ws.service.user.UserService;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
+import br.com.devgemin.base.ws.service.user.update.UpdateUserService;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/api/user")
 public class UserController extends RestService {
 
 	private UserService userService;
+	private UpdateUserService updateUserService;
 	
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UpdateUserService updateUserService) {
 		this.userService = userService;
+		this.updateUserService = updateUserService;
 	}
 
     @ApiOperation(value = "getCurrentUser", nickname = "getCurrentUser", notes = "Show current user")
@@ -75,6 +87,28 @@ public class UserController extends RestService {
         loggerSupport.logSuccess(httpRequest);
         return userProfileResponse;
     }
+    
+    @ApiOperation(value = "getAllUsers", nickname = "getAllUsers", notes = "Get All Users")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "List users Response", response = UserResponse[].class)
+	})
+	@GetMapping(path="/all")
+    @PreAuthorize("hasRole('ADMIN')")
+	public @ResponseBody List<UserResponse> getAllUsers(HttpServletRequest httpRequest) {
+    	List<UserResponse> response = userService.findAll();
+    	loggerSupport.logSuccess(httpRequest);
+		return response;
+	}
 
+    @ApiOperation(value = "updateUser", nickname = "updateUser", notes = "Update an existing user")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Operação realizada com sucesso", response = SuccessResponse.class)
+    })
+    @PutMapping(path = "/{idUser}", consumes = APPLICATION_JSON_VALUE)
+    public @ResponseBody SuccessResponse update(HttpServletRequest httpRequest, @ApiParam(name = "idUser", value = "ID user", required = true) @PathVariable("idUser") String idUser, @ApiParam(name = "updateUser", value = "update user data", required = true) @RequestBody UpdateUserRequest request) {
+        SuccessResponse response = updateUserService.update(idUser, request);
+        loggerSupport.logSuccess(httpRequest);
+        return response;
+    }
 
 }

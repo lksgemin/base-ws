@@ -48,7 +48,7 @@ public class SignUp {
 
         // Creating user's account
         User user = new User(signUpRequest.getName(), signUpRequest.getUsername(),
-                signUpRequest.getEmail(), signUpRequest.getPassword());
+                signUpRequest.getEmail(), signUpRequest.getPassword(), signUpRequest.isActive());
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 

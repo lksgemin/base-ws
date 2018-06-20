@@ -13,6 +13,7 @@ import br.com.devgemin.base.ws.request.LoginRequest;
 import br.com.devgemin.base.ws.request.SignUpRequest;
 import br.com.devgemin.base.ws.service.auth.SignIn;
 import br.com.devgemin.base.ws.service.auth.SignUp;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -26,6 +27,7 @@ public class AuthController extends RestService {
 		this.signUp = signUp;
 	}
     
+	@ApiOperation(value = "authenticateUser", nickname = "authenticateUser", notes = "Authenticate User")
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(HttpServletRequest httpRequest, @Valid @RequestBody LoginRequest loginRequest) {
 
@@ -34,6 +36,7 @@ public class AuthController extends RestService {
         return response;
     }
 
+	@ApiOperation(value = "registerUser", nickname = "registerUser", notes = "Register User")
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(HttpServletRequest httpRequest, @Valid @RequestBody SignUpRequest signUpRequest) {
     	ResponseEntity<?> response = signUp.registerUser(signUpRequest);

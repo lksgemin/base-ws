@@ -57,6 +57,8 @@ public class User extends DateAudit {
     @NotBlank
     @Size(max = 100)
     private String password;
+    
+    private boolean active;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
@@ -68,11 +70,12 @@ public class User extends DateAudit {
 
     }
 
-    public User(String name, String username, String email, String password) {
+    public User(String name, String username, String email, String password, boolean active) {
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.active = active;
     }
 
     public Long getId() {
@@ -115,7 +118,15 @@ public class User extends DateAudit {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
+    public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	public Set<Role> getRoles() {
         return roles;
     }
 

@@ -10,6 +10,7 @@ import br.com.devgemin.base.ws.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+	
 	Optional<User> findByEmail(String email);
 
 	Optional<User> findByUsernameOrEmail(String username, String email);
