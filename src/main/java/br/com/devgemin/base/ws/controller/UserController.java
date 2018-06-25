@@ -49,7 +49,7 @@ public class UserController extends RestService {
             @ApiResponse(code = 200, message = "Current User", response = UserSummary.class)
     })
 	@GetMapping("/me")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public UserSummary getCurrentUser(@CurrentUser UserPrincipal currentUser) {
         UserSummary userSummary = new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getName());
         return userSummary;
@@ -81,7 +81,7 @@ public class UserController extends RestService {
     @ApiResponses({
             @ApiResponse(code = 200, message = "User profile founded", response = UserIdentityAvailabilityResponse.class)
     })
-    @GetMapping("/{username}")
+    @GetMapping("/getUserProfileBy/{username}")
     public UserProfileResponse getUserProfile(HttpServletRequest httpRequest, @PathVariable(value = "username") String username) {
         UserProfileResponse userProfileResponse = userService.getUserProfile(username);
         loggerSupport.logSuccess(httpRequest);
@@ -109,6 +109,17 @@ public class UserController extends RestService {
         SuccessResponse response = updateUserService.update(idUser, request);
         loggerSupport.logSuccess(httpRequest);
         return response;
+    }
+    
+    @ApiOperation(value = "getUserById", nickname = "getUserById", notes = "Get User By Id")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "User founded", response = UserResponse.class)
+    })
+    @GetMapping("/{id}")
+    public UserResponse getUserById(HttpServletRequest httpRequest, @PathVariable(value = "id") String id) {
+        UserResponse userResponse = userService.getUserById(id);
+        loggerSupport.logSuccess(httpRequest);
+        return userResponse;
     }
 
 }

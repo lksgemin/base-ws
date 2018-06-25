@@ -5,20 +5,25 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import br.com.devgemin.base.ws.exception.baseexception.notfound.UserIdNotFoundException;
 import br.com.devgemin.base.ws.exception.baseexception.notfound.UserNameNotFoundException;
 import br.com.devgemin.base.ws.model.User;
 import br.com.devgemin.base.ws.repository.UserRepository;
 import br.com.devgemin.base.ws.response.UserIdentityAvailabilityResponse;
 import br.com.devgemin.base.ws.response.UserProfileResponse;
 import br.com.devgemin.base.ws.response.UserResponse;
+import br.com.devgemin.base.ws.util.Validator;
 
 @Component
 public class UserService {
 
 	private UserRepository userRepository;
+	
+	private Validator validator;
 
-	public UserService(UserRepository userRepository) {
+	public UserService(UserRepository userRepository, Validator validator) {
 		this.userRepository = userRepository;
+		this.validator = validator;
 	}
 	
 	public UserProfileResponse getUserProfile(String username) {
@@ -47,6 +52,18 @@ public class UserService {
 
 		return newUserResponseList(users);
 	}
+	
+	 public UserResponse getUserById(String id) {
+		validator.idUserEmpty(id);
+		validator.idUserInvalid(id);
+
+		User user = userRepository.findById(Long.valueOf(id)).orElseThrow(
+	             () -> new UserIdNotFoundException()
+	    );
+	
+		UserResponse userResponse = new UserResponse(user);
+        return userResponse;
+    }
 	
 	private List<UserResponse> newUserResponseList(List<User> users){
 		List<UserResponse> usersResponse = new ArrayList<>();
