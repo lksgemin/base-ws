@@ -51,7 +51,7 @@ public class UserController extends RestService {
 	@GetMapping("/me")
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public UserSummary getCurrentUser(@CurrentUser UserPrincipal currentUser) {
-        UserSummary userSummary = new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getName());
+        UserSummary userSummary = userService.getCurrentUser(currentUser);
         return userSummary;
     }
 

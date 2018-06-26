@@ -35,8 +35,6 @@ public class SignUp {
 	}
 
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
-        System.out.println(signUpRequest.getUsername());
-        System.out.println(signUpRequest.getEmail());
         
 		if(userRepository.existsByUsername(signUpRequest.getUsername())) {
             throw new SignUpExistingUsernameException();
@@ -56,6 +54,7 @@ public class SignUp {
                 .orElseThrow(() -> new HandlerException("1", "User Role not set."));
 
         user.setRoles(Collections.singleton(userRole));
+        user.setActive(true);
 
         User result = userRepository.save(user);
 

@@ -12,6 +12,8 @@ import br.com.devgemin.base.ws.repository.UserRepository;
 import br.com.devgemin.base.ws.response.UserIdentityAvailabilityResponse;
 import br.com.devgemin.base.ws.response.UserProfileResponse;
 import br.com.devgemin.base.ws.response.UserResponse;
+import br.com.devgemin.base.ws.response.UserSummary;
+import br.com.devgemin.base.ws.security.UserPrincipal;
 import br.com.devgemin.base.ws.util.Validator;
 
 @Component
@@ -25,6 +27,11 @@ public class UserService {
 		this.userRepository = userRepository;
 		this.validator = validator;
 	}
+	
+	public UserSummary getCurrentUser(UserPrincipal currentUser) {
+        UserSummary userSummary = new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getName(), verifyIsAdminUser(currentUser));
+        return userSummary;
+    }
 	
 	public UserProfileResponse getUserProfile(String username) {
         User user = userRepository.findByUsername(username);
@@ -53,7 +60,7 @@ public class UserService {
 		return newUserResponseList(users);
 	}
 	
-	 public UserResponse getUserById(String id) {
+	public UserResponse getUserById(String id) {
 		validator.idUserEmpty(id);
 		validator.idUserInvalid(id);
 
@@ -64,6 +71,13 @@ public class UserService {
 		UserResponse userResponse = new UserResponse(user);
         return userResponse;
     }
+	
+	private boolean verifyIsAdminUser(UserPrincipal currentUser) {
+		boolean isAdmin = currentUser.getAuthorities().stream().anyMatch( role-> 
+			role.getAuthority().equals("ROLE_ADMIN"));
+		
+		return isAdmin;
+	}
 	
 	private List<UserResponse> newUserResponseList(List<User> users){
 		List<UserResponse> usersResponse = new ArrayList<>();
